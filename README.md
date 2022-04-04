@@ -1,0 +1,1 @@
+# swe-salary-estimator
