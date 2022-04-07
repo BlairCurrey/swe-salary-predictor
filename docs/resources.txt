@@ -1,0 +1,15 @@
+tensforflow, NN, regression
+https://www.tensorflow.org/tutorials/keras/regression
+https://colab.research.google.com/github/tensorflow/docs/blob/master/site/en/tutorials/keras/regression.ipynb#scrollTo=CXDENACl2tuW
+
+stack overflow developer survey ML model
+https://www.youtube.com/watch?v=xl0N7tHiwlw
+
+mongoDB changes streams
+https://www.mongodb.com/docs/manual/changeStreams/
+
+fastapi docs
+https://fastapi.tiangolo.com/
+
+Setting up fast api w/ streamlit
+https://testdriven.io/blog/fastapi-streamlit/
