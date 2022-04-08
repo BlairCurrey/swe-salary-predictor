@@ -5,11 +5,18 @@ https://colab.research.google.com/github/tensorflow/docs/blob/master/site/en/tut
 stack overflow developer survey ML model
 https://www.youtube.com/watch?v=xl0N7tHiwlw
 
-mongoDB changes streams
+distribute files with redis
+https://redis.com/ebook/part-2-core-concepts/chapter-6-application-components-in-redis/6-6-distributing-files-with-redis/
+
+mongoDB changes streams and file storage
 https://www.mongodb.com/docs/manual/changeStreams/
+https://www.mongodb.com/docs/manual/core/gridfs/
 
 fastapi docs
 https://fastapi.tiangolo.com/
 
 Setting up fast api w/ streamlit
 https://testdriven.io/blog/fastapi-streamlit/
+
+docs for tensorflow save_model
+https://www.tensorflow.org/guide/saved_model
