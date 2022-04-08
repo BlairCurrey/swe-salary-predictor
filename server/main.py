@@ -21,7 +21,7 @@ async def read_root(request: Request):
 
 @app.post("/")
 def submit_form(num1: int = Form(...), num2: int = Form(...)):
-    prediction = model.predict(np.array([num1, num2]))
+    prediction: np.ndarray = model.predict([num1, num2])
 
     # save inputs in db (if salary given)
 
