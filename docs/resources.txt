@@ -20,3 +20,6 @@ https://testdriven.io/blog/fastapi-streamlit/
 
 docs for tensorflow save_model
 https://www.tensorflow.org/guide/saved_model
+
+how to retrieve files from remote server (need way to get saved tensorflow model)
+https://stackoverflow.com/questions/1699634/how-to-retrieve-a-directory-of-files-from-a-remote-server
