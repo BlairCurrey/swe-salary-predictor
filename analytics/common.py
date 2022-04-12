@@ -1,7 +1,7 @@
 import datetime as dt
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, MultiLabelBinarizer
 
 
 def log(f):
@@ -47,12 +47,11 @@ class DataLoader:
             'Age1stCode',
             'YearsCode',
             'YearsCodePro',
-            # 'OrgSize', # TODO: implement or remove
             'Country',
             # 'US_State', # TODO: implemented ohe or remove
             # 'UK_Country', # TODO: implemented ohe or remove
-            # 'DevType', # TODO: implemented ohe or remove
-            # 'LanguageHaveWorkedWith', # TODO: implemented ohe or remove
+            'DevType',
+            'LanguageHaveWorkedWith',
             'Age'
         ]]
 
@@ -94,7 +93,7 @@ class DataLoader:
                 '45 - 54 years': 49.5,
                 '55 - 64 years': 59.5,
                 'Older than 64 years': 65
-            }
+            },
         })
         # replace Age > 'Prefer not to say' and nan with mean
         df = df.replace({'Age': {'Prefer not to say': np.nan}})
@@ -115,18 +114,14 @@ class DataLoader:
         #     .apply(lambda row: self._get_location_name(row), axis=1)
         # )
 
-        # TODO: one-hot-encode these lists or remove
-        # DevType - WIP turns ; delimited list into python list
-        # df['DevType'] = df[['DevType']].fillna('missing')
-        # # change dev type list string to list and get all unique values
-        # df['DevType'] = df['DevType'].apply(lambda x: x.split(';'))
-        # dev_types = df["DevType"].explode().unique()
-        # # encode dev types and apply to each list
-        # le.fit(dev_types)
-        # df['DevType'] = df['DevType'].apply(lambda x: x.split(';'))
+        # DevType
+        df['DevType'] = df[['DevType']].fillna('MissingDevType')
+        df = self._df_encoded_delimited_string(df, 'DevType')
 
-        # TODO: one-hot-encode these lists or remove
-        # LanguageHaveWorkedWith - WIP
+        # LanguageHaveWorkedWith
+        df['LanguageHaveWorkedWith'] = (df[['LanguageHaveWorkedWith']]
+            .fillna('MissingLanguageHaveWorkedWith'))
+        df = self._df_encoded_delimited_string(df, 'LanguageHaveWorkedWith')
 
         # one hot encode Country
         df['Country'] = df[['Country']].fillna('missing')
@@ -155,9 +150,6 @@ class DataLoader:
         df['YearsCode'] = df[['YearsCode']].fillna(df['YearsCode'].mean(skipna=True))
         df['YearsCodePro'] = df[['YearsCodePro']].fillna(df['YearsCodePro'].mean(skipna=True))
         df['Age1stCode'] = df[['Age1stCode']].fillna(df['Age1stCode'].mean(skipna=True))
-
-        # fill other encoded values with "missing"
-
         return df
 
     def _drop(self, df):
@@ -165,8 +157,10 @@ class DataLoader:
 
     def _encoder_map(self, encoder):
         # returns map of labels to encoded values - helpful for inspecting
-        # return dict(zip(encoder.classes_, encoder.transform(encoder.classes_)))
-        return [dict(enumerate(mapping)) for mapping in encoder.categories_][0]
+        if isinstance(encoder, (OneHotEncoder, OrdinalEncoder)):
+            return [dict(enumerate(mapping)) for mapping in encoder.categories_][0]
+        elif isinstance(encoder, MultiLabelBinarizer):
+            return dict(zip(encoder.classes_, encoder.transform(encoder.classes_)))
     
     def _get_location_name(self, row):
         if row['Country'] == 'United States of America':
@@ -182,11 +176,33 @@ class DataLoader:
         feature_labels = np.array(ohe.categories_).ravel()
         df_features = pd.DataFrame(feature_arr, columns=feature_labels)
 
-        # for c in columns:
-        #     self.encodings[c] = self._encoder_map(ohe)
+        for c in columns:
+            self.encodings[c] = self._encoder_map(ohe)
 
         df.reset_index(drop=True, inplace=True)
         df_features.reset_index(drop=True, inplace=True)
         df = pd.concat([df, df_features], axis=1)
 
         return df
+
+    def _df_encoded_delimited_string(self, df, column):
+            # change delimited string to list
+            df[column] = df[column].apply(lambda x: x.split(';'))
+
+            # Alternative sparse matrix 
+            # mlb = MultiLabelBinarizer(sparse_output=True)
+            # df = df.join(
+            #     pd.DataFrame.sparse.from_spmatrix(
+            #         mlb.fit_transform(df.pop('DevType')),
+            #         index=df.index,
+            #         columns=mlb.classes_))
+
+            mlb = MultiLabelBinarizer()
+            df = df.join(pd.DataFrame(
+                            mlb.fit_transform(df.pop(column)),
+                            columns=mlb.classes_, 
+                            index=df.index))
+
+            # self.encodings[column] = self._encoder_map(mlb)
+
+            return df
