@@ -1,29 +1,37 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from tensorflow import keras
 import numpy as np
+from database import get_db
+from sqlalchemy.orm import Session
+from models import PredictionInput
+from utils import isValidSalary
 
-model = keras.models.load_model('./dnn_model_keras')
+dnn_model = keras.models.load_model('./dnn_model_keras')
 templates = Jinja2Templates(directory="templates")
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Initialize DB connection
-# Listen to DB for model changes
-# Update model when changes are made
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("home.jinja", {"request": request})
 
 @app.post("/")
-def submit_form(request: Request, num1: int = Form(...), num2: int = Form(...)):
-    prediction: np.ndarray = model.predict([num1, num2]).item()
+def submit_form(request: Request, db: Session = Depends(get_db), 
+                years_code: int = Form(...), years_code_pro: int = Form(...),
+                salary_actual: int = Form(...)):
 
-    # save inputs in db (if salary given)
+    print(salary_actual)
 
-    # return { "salary": prediction }
+    if(isValidSalary(salary_actual)):
+        db.add(PredictionInput(years_code=years_code, 
+                years_code_pro=years_code_pro, 
+                salary_actual=salary_actual))
+        db.commit()
+
+    prediction: np.ndarray = dnn_model.predict([years_code, years_code_pro]).item()
+
     return templates.TemplateResponse("prediction.jinja", {"request": request, "prediction": prediction})

@@ -20,8 +20,9 @@ def upgrade():
     op.create_table(
         'prediction_inputs',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('years_coding', sa.Integer, nullable=False),
-        sa.Column('years_coding_pro', sa.Integer, nullable=False),
+        sa.Column('years_code', sa.Integer, nullable=False),
+        sa.Column('years_code_pro', sa.Integer, nullable=False),
+        sa.Column('salary_actual', sa.Integer, nullable=False),
     )
 
 def downgrade():

@@ -32,3 +32,7 @@ To upgrade to most recent version:
     alembic upgrade head
 
 Could alternatively replace head with revision id to upgrade to a specific revision instead.
+
+To undo the last migration:
+
+    alembic downgrade -1
