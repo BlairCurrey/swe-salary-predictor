@@ -18,8 +18,15 @@ https://www.mongodb.com/docs/manual/core/gridfs/
 fastapi docs
 https://fastapi.tiangolo.com/
 
-Setting up fast api w/ streamlit
+Setting up fast api w/ streamlit. This may be a good direction to go. See "asyncio.create_task"
+for idea on how to potentially update model on api
 https://testdriven.io/blog/fastapi-streamlit/
 
 docs for tensorflow save_model
 https://www.tensorflow.org/guide/saved_model
+
+sentdex youtube video for basic hyper parameter tuning w/ keras
+https://www.youtube.com/watch?v=vvC15l4CY1Q
+
+google cloud chron jobs. could make an image that looks at db for records and retrains if > threshold and run this on a chron job.
+https://cloud.google.com/scheduler/docs/creating
