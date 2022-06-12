@@ -2,3 +2,5 @@
 .ipynb_checkpoints
 .env
 __pycache__/
+dnn_model_keras
+dnn_model

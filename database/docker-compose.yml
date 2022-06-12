@@ -1,0 +1,15 @@
+# Use postgres/password user/password credentials
+version: '3.8'
+services:
+  database:
+    image: "postgres:14.3"
+    restart: always
+    volumes:
+    - database-data:/var/lib/postgresql/data
+    - ./init_db.sh:/docker-entrypoint-initdb.d/init.sh
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose
