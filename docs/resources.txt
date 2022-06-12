@@ -30,3 +30,6 @@ https://www.youtube.com/watch?v=vvC15l4CY1Q
 
 google cloud chron jobs. could make an image that looks at db for records and retrains if > threshold and run this on a chron job.
 https://cloud.google.com/scheduler/docs/creating
+
+how to retrieve files from remote server (need way to get saved tensorflow model)
+https://stackoverflow.com/questions/1699634/how-to-retrieve-a-directory-of-files-from-a-remote-server
