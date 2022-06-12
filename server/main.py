@@ -17,12 +17,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return templates.TemplateResponse("form.jinja", {"request": request})
+    return templates.TemplateResponse("home.jinja", {"request": request})
 
 @app.post("/")
-def submit_form(num1: int = Form(...), num2: int = Form(...)):
-    prediction: np.ndarray = model.predict([num1, num2])
+def submit_form(request: Request, num1: int = Form(...), num2: int = Form(...)):
+    prediction: np.ndarray = model.predict([num1, num2]).item()
 
     # save inputs in db (if salary given)
 
-    return { "salary": prediction.item() }
+    # return { "salary": prediction }
+    return templates.TemplateResponse("prediction.jinja", {"request": request, "prediction": prediction})
