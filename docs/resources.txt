@@ -33,3 +33,6 @@ https://cloud.google.com/scheduler/docs/creating
 
 how to retrieve files from remote server (need way to get saved tensorflow model)
 https://stackoverflow.com/questions/1699634/how-to-retrieve-a-directory-of-files-from-a-remote-server
+
+ways to update model w/ more data
+https://machinelearningmastery.com/update-neural-network-models-with-more-data/
