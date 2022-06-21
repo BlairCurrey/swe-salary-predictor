@@ -5,7 +5,7 @@ on ubuntu:
 
     sudo apt-get install libpq-dev
 
-Create db via docker:
+Create/run db via docker:
 
     docker-compose up -d
 
