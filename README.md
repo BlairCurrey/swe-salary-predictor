@@ -14,3 +14,6 @@ Fastapi server that will store user input into db, get latest model from db, pre
 
 ## database
 Postgres database initialized with docker and managed with `alembic`.
+
+## retrainer
+Takes the original model and fits additional data to it. Saves the resulting model.
