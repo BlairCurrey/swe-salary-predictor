@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, MultiLabelBinarizer
 
+RAW_DATASET_LABELS = ["ResponseId","MainBranch","Employment","Country","US_State","UK_Country","EdLevel","Age1stCode","LearnCode","YearsCode","YearsCodePro","DevType","OrgSize","Currency","CompTotal","CompFreq","LanguageHaveWorkedWith","LanguageWantToWorkWith","DatabaseHaveWorkedWith","DatabaseWantToWorkWith","PlatformHaveWorkedWith","PlatformWantToWorkWith","WebframeHaveWorkedWith","WebframeWantToWorkWith","MiscTechHaveWorkedWith","MiscTechWantToWorkWith","ToolsTechHaveWorkedWith","ToolsTechWantToWorkWith","NEWCollabToolsHaveWorkedWith","NEWCollabToolsWantToWorkWith","OpSys","NEWStuck","NEWSOSites","SOVisitFreq","SOAccount","SOPartFreq","SOComm","NEWOtherComms","Age","Gender","Trans","Sexuality","Ethnicity","Accessibility","MentalHealth","SurveyLength","SurveyEase","ConvertedCompYearly"]
 
 def log(f):
     def wrapper(df, *args, **kwargs):
@@ -14,21 +15,33 @@ def log(f):
     return wrapper
 
 class DataLoader:
-    def __init__(self, path):
+    salary_min = 15_000
+    salary_max = 300_000
+
+    def __init__(self, df=None, path=None):
         self.encodings = {}
         self.counts = {'US': 0, 'UK': 0}
         self.last_location = {'US': '', 'UK': ''}
-        self.df = self.get_df(path)
+        self.is_path_loaded = path is not None
 
-    def get_df(self, path):
-        df_raw = pd.read_csv(path)
+        self._check_load_args(df, path)
+        
+        self.df = self.get_df(df=df) if df is not None else self.get_df(path=path)
+
+    def _check_load_args(self, df=None, path=None):
+        if df is None and path is None:
+            raise ValueError('Must provide path or df')
+
+    def get_df(self, df=None, path=None):
+        self._check_load_args(df, path)
+
+        df_raw =  df if df is not None else pd.read_csv(path)
         return (df_raw
             .pipe(self._start_pipeline)
             .pipe(self._select)
             .pipe(self._clean)
             .pipe(self._remove_outliers)
             .pipe(self._handle_missing)
-            .pipe(self._drop)
         )
 
     @log
@@ -48,8 +61,6 @@ class DataLoader:
             'YearsCode',
             'YearsCodePro',
             'Country',
-            # 'US_State', # TODO: implemented ohe or remove
-            # 'UK_Country', # TODO: implemented ohe or remove
             'DevType',
             'LanguageHaveWorkedWith',
             'Age'
@@ -99,33 +110,12 @@ class DataLoader:
         df = df.replace({'Age': {'Prefer not to say': np.nan}})
         df['Age'] = df[['Age']].fillna(df['Age'].mean(skipna=True))
 
-        # encode EdLevel
+        # fill missing
         df['EdLevel'] = df[['EdLevel']].fillna(df['EdLevel'].mode()[0])
-        oe = OrdinalEncoder(categories=[['Less than Associates', 'Associates', 
-                                        'Bachelors', 'Masters', 'Doctorate']])
-        df['EdLevel'] = oe.fit_transform(df['EdLevel'].values.reshape(-1,1))
-        self.encodings['EdLevel'] = self._encoder_map(oe)
-
-        # TODO: change to ohe or remove
-        # convert country and state (if any for UK/US)
-        # to compound location and one-hot-enconde
-        # df['Location'] = (df[['Country', 'US_State', 'UK_Country']]
-        #     .fillna('')
-        #     .apply(lambda row: self._get_location_name(row), axis=1)
-        # )
-
-        # DevType
         df['DevType'] = df[['DevType']].fillna('MissingDevType')
-        df = self._df_encoded_delimited_string(df, 'DevType')
-
-        # LanguageHaveWorkedWith
         df['LanguageHaveWorkedWith'] = (df[['LanguageHaveWorkedWith']]
             .fillna('MissingLanguageHaveWorkedWith'))
-        df = self._df_encoded_delimited_string(df, 'LanguageHaveWorkedWith')
-
-        # one hot encode Country
         df['Country'] = df[['Country']].fillna('missing')
-        df = self._get_ohe_df(df, ['Country'])
 
         # convert string numbers to numbers
         string_numbers = ['YearsCode', 'YearsCodePro', 'Age']
@@ -137,11 +127,13 @@ class DataLoader:
     @log 
     def _remove_outliers(self, df):
         # df = df[(np.abs(stats.zscore(df['ConvertedCompYearly'])) < .25)]
-        df = df[df['ConvertedCompYearly'] <= 300000]
-        df = df[df['ConvertedCompYearly'] >= 15000]
+        df = df[df['ConvertedCompYearly'] <= self.salary_max]
+        df = df[df['ConvertedCompYearly'] >= self.salary_min]
 
-        # remove countries below a certain threshold of records
-        df = df[df['Country'].map(df['Country'].value_counts()) > 100]
+        # remove countries below a certain threshold of records,
+        # but not if DataLoader is being used to make a new input
+        if(self.is_path_loaded):
+            df = df[df['Country'].map(df['Country'].value_counts()) > 100]
 
         return df
 
@@ -151,58 +143,3 @@ class DataLoader:
         df['YearsCodePro'] = df[['YearsCodePro']].fillna(df['YearsCodePro'].mean(skipna=True))
         df['Age1stCode'] = df[['Age1stCode']].fillna(df['Age1stCode'].mean(skipna=True))
         return df
-
-    def _drop(self, df):
-        return df.drop(['Country'], axis=1)
-
-    def _encoder_map(self, encoder):
-        # returns map of labels to encoded values - helpful for inspecting
-        if isinstance(encoder, (OneHotEncoder, OrdinalEncoder)):
-            return [dict(enumerate(mapping)) for mapping in encoder.categories_][0]
-        elif isinstance(encoder, MultiLabelBinarizer):
-            return dict(zip(encoder.classes_, encoder.transform(encoder.classes_)))
-    
-    def _get_location_name(self, row):
-        if row['Country'] == 'United States of America':
-            return 'US_' + row['US_State']
-        elif row['Country'] == 'United Kingdom of Great Britain and Northern Ireland':
-            return 'UK_' + row['UK_Country']
-        else:
-            return row['Country']
-    
-    def _get_ohe_df(self, df, columns):
-        ohe = OneHotEncoder()
-        feature_arr = ohe.fit_transform(df[columns]).toarray()
-        feature_labels = np.array(ohe.categories_).ravel()
-        df_features = pd.DataFrame(feature_arr, columns=feature_labels)
-
-        for c in columns:
-            self.encodings[c] = self._encoder_map(ohe)
-
-        df.reset_index(drop=True, inplace=True)
-        df_features.reset_index(drop=True, inplace=True)
-        df = pd.concat([df, df_features], axis=1)
-
-        return df
-
-    def _df_encoded_delimited_string(self, df, column):
-            # change delimited string to list
-            df[column] = df[column].apply(lambda x: x.split(';'))
-
-            # Alternative sparse matrix 
-            # mlb = MultiLabelBinarizer(sparse_output=True)
-            # df = df.join(
-            #     pd.DataFrame.sparse.from_spmatrix(
-            #         mlb.fit_transform(df.pop('DevType')),
-            #         index=df.index,
-            #         columns=mlb.classes_))
-
-            mlb = MultiLabelBinarizer()
-            df = df.join(pd.DataFrame(
-                            mlb.fit_transform(df.pop(column)),
-                            columns=mlb.classes_, 
-                            index=df.index))
-
-            # self.encodings[column] = self._encoder_map(mlb)
-
-            return df
