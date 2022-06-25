@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ARRAY, String
-from database import Base
+from lib.database import Base
 
 class PredictionInput(Base):
     __tablename__ = "prediction_inputs"

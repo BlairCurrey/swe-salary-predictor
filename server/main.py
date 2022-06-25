@@ -3,22 +3,24 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from tensorflow import keras
-import numpy as np
-from database import get_db
 from sqlalchemy.orm import Session
-from models import PredictionInput
-from utils import isValidSalary, Encodings
-from schemas import PredictForm
+from lib.database import get_db
+from lib.models import PredictionInput
+from lib.utils import isValidSalary
+from lib.Encodings import Encodings
+from lib.schemas import PredictForm
+from lib.Store import Store
 
 app = FastAPI()
-model = keras.models.load_model('./model_1656041268')
+store = Store()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-enc = Encodings()
+model = keras.models.load_model('./model_1656041268')
+encodings = Encodings(store.get_blob_str('encodings.pickle'))
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    options = enc.get_labels()
+    options = encodings.get_labels()
     return templates.TemplateResponse("home.jinja", {"request": request, 
         "countries": options["countries"], "ed_levels": options["ed_levels"],
         "dev_types": options["dev_types"], "languages": options["languages"]})
@@ -59,7 +61,7 @@ def submit_form(request: Request, db: Session = Depends(get_db),
             print(f"Unexpected {err}, {type(err)}")
 
     # make prediction
-    pred_input = enc.make_input(form_pred_inputs)
-    prediction: np.ndarray = model.predict(pred_input).item()
+    pred_input = encodings.make_input(form_pred_inputs)
+    prediction = model.predict(pred_input).item()
     
     return templates.TemplateResponse("prediction.jinja", {"request": request, "prediction": prediction})

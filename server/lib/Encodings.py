@@ -3,14 +3,9 @@ import pandas as pd
 import numpy as np
 import pickle
 
-def isValidSalary(salary: int):
-    return 0 < salary < 1_000_000
-
 class Encodings:
-    def __init__(self):
-        with open("encodings.pickle", "rb") as f:
-            encodings = pickle.load(f)
-
+    def __init__(self, encodings_pickle_str):
+        encodings = pickle.loads(encodings_pickle_str)
         self.dev_type_mlb = encodings["dev_type_mlb"]
         self.languages_mlb = encodings["languages_mlb"]
         self.ed_level_oe = encodings["ed_level_oe"]

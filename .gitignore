@@ -5,3 +5,4 @@ __pycache__/
 dnn_model*
 model_*
 *.pickle
+swe-salary-predictor-*.json
