@@ -12,6 +12,41 @@
         <label for="years-code-pro-input">Years Experience Coding Professionally</label>
         <input id="years-code-pro-input" type="number" name="years_code_pro"/>
         <br/>
+        <label for="age-input">Age</label>
+        <input id="age-input" type="number" name="age"/>
+        <br/>
+        <label for="age-first-code-input">Age You First Coded</label>
+        <input id="age-first-code-input" type="number" name="age_first_code"/>
+        <br/>
+        <label for="country-select">Country</label>
+        <select id="country-select" name="country">
+            {% for country in countries %}
+                <option value="{{country}}">{{country}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        <label for="ed-level-select">Education Level</label>
+        <select id="ed-level-select" name="ed_level">
+            {% for ed_level in ed_levels %}
+                <option value="{{ed_level}}">{{ed_level}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        <label for="dev-type-multiselect">Role Type</label>
+        <select id="dev-type-multiselect" name="dev_type">
+            {% for dev_type in dev_types %}
+                <option value="{{dev_type}}">{{dev_type}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        <label for="languages-multiselect">Languages</label>
+        <select id="languages-multiselect" name="languages" multiple>
+            {% for language in languages %}
+                <option value="{{language}}">{{language}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+
         <label for="salary-actual-input">Actual Salary</label>
         <input id="salary-actual-input" type="number" name="salary_actual"/>
         <p>
