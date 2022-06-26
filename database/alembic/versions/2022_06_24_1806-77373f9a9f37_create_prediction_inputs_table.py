@@ -7,6 +7,8 @@ Create Date: 2022-06-24 18:06:20.142381
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 
 # revision identifiers, used by Alembic.
@@ -19,7 +21,7 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         'prediction_inputs',
-        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('uuid', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
         sa.Column('years_code', sa.Integer, nullable=False),
         sa.Column('years_code_pro', sa.Integer, nullable=False),
         sa.Column('age', sa.Integer, nullable=False),

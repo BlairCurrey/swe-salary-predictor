@@ -1,9 +1,11 @@
-from sqlalchemy import Column, Integer, ARRAY, String
+from sqlalchemy import Column, Integer, ARRAY, String, DateTime, func
+from sqlalchemy.dialects.postgresql import UUID
 from lib.database import Base
+import uuid
 
 class PredictionInput(Base):
     __tablename__ = "prediction_inputs"
-    id = Column('id', Integer, primary_key=True)
+    uuid = Column('uuid', Integer, primary_key=True)
     years_code = Column('years_code', Integer, nullable=False)
     years_code_pro = Column('years_code_pro', Integer, nullable=False)
     age = Column('age', Integer, nullable=False)
@@ -13,3 +15,17 @@ class PredictionInput(Base):
     dev_type = Column('dev_type', ARRAY(String), nullable=False)
     languages = Column('languages', ARRAY(String), nullable=False)
     salary_actual = Column('salary_actual', Integer, nullable=False)
+
+class EncodingsStore(Base):
+    __tablename__ = "encodings_store"
+    uuid = Column('uuid', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    bucket = Column('bucket', String, nullable=False)
+    path = Column('path', String, nullable=False)
+    created_at = Column('created_at', DateTime(timezone=True), nullable=False, default=func.now())
+
+class ModelsStore(Base):
+    __tablename__ = "models_store"
+    uuid = Column('uuid', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    bucket = Column('bucket', String, nullable=False)
+    path = Column('path', String, nullable=False)
+    created_at = Column('created_at', DateTime(timezone=True), nullable=False, default=func.now())

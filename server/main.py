@@ -2,24 +2,22 @@ from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from tensorflow import keras
 from sqlalchemy.orm import Session
 from lib.database import get_db
-from lib.models import PredictionInput
+from lib.models import EncodingsStore, PredictionInput
 from lib.utils import isValidSalary
-from lib.Encodings import Encodings
 from lib.schemas import PredictForm
-from lib.Store import Store
+from lib.StoreClient import StoreClient
 
 app = FastAPI()
-store = Store()
+store = StoreClient()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-model = keras.models.load_model('./model_1656041268')
-encodings = Encodings(store.get_blob_str('encodings.pickle'))
+model = store.fetch_model()
+encodings = store.fetch_encodings()
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
+async def read_root(request: Request, db: Session = Depends(get_db)):
     options = encodings.get_labels()
     return templates.TemplateResponse("home.jinja", {"request": request, 
         "countries": options["countries"], "ed_levels": options["ed_levels"],
