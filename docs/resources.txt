@@ -39,3 +39,7 @@ https://machinelearningmastery.com/update-neural-network-models-with-more-data/
 
 tensforflow article on serving tensorflow model. might be a good way to share beween services
 https://www.tensorflow.org/tfx/serving/serving_basic
+
+some simple css and hackernoon discussion about other ligthweight frontend tools
+https://www.cssbed.com/
+https://news.ycombinator.com/item?id=32011439
