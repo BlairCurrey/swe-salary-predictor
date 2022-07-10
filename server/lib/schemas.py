@@ -2,13 +2,8 @@ from pydantic import BaseModel
 from fastapi import Form
 from typing import List, Optional
 
-class CreatePredictionInput(BaseModel):
-    years_code: int
-    years_code_pro: int
-    salary_actual: int
-
 # https://stackoverflow.com/a/60670614
-class PredictForm(BaseModel):
+class PredictFormSchema(BaseModel):
     years_code: int
     years_code_pro: int
     age_first_code: int
@@ -18,6 +13,7 @@ class PredictForm(BaseModel):
     languages: List[str]
     ed_level: str
     salary_actual: Optional[int]
+    permission_granted: bool
 
     @classmethod
     def as_form(
@@ -30,7 +26,8 @@ class PredictForm(BaseModel):
         dev_type: List[str] = Form(...),
         languages: List[str] = Form(...),
         ed_level: str = Form(...),
-        salary_actual: Optional[int] = Form(None)
+        salary_actual: Optional[int] = Form(None),
+        permission_granted: bool = Form(...)
     ):
         return cls(
             years_code=years_code,
@@ -41,5 +38,21 @@ class PredictForm(BaseModel):
             dev_type=dev_type,
             languages=languages,
             ed_level=ed_level,
-            salary_actual=salary_actual
+            salary_actual=salary_actual,
+            permission_granted=permission_granted
         )
+
+class ModelStoreSchema(BaseModel):
+    bucket: str
+    path: str
+
+class UntrainedInputEncodedDataSchema(BaseModel):
+    input_encoded: List[float]
+    salary: float
+    uuid: object
+
+class UntrainedInputsEncodedResponseSchema(BaseModel):
+    data: List[UntrainedInputEncodedDataSchema]
+
+    class Config:
+        arbitrary_types_allowed = True

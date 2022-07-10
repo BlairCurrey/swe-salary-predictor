@@ -1,29 +1,45 @@
 import tensorflow as tf
-import pandas as pd
 import numpy as np
-import random
+from lib.StoreClient import StoreClient
+from lib.ApiClient import ApiClient
 
 tf.data.experimental.enable_debug_mode()
 
-model = tf.keras.models.load_model('./dnn_model_keras')
+store = StoreClient()
+model = store.fetch_model()
+response = ApiClient.get_untrained_inputs_encoded()['data']
 
-# 10,000 inputs with 1 years exp and random salary between 20,000 and 30,000 
-new_inputs_count = 10_000
-new_inputs_labels = pd.Series([random.randint(20_000, 30_000)
-                    for x in range(new_inputs_count)])
-new_inputs_features = pd.DataFrame([{"YearsCode": 1, "YearsCodePro": 1} for x in range(new_inputs_count)])
+untrained_inputs = np.array([[row['input_encoded'] for row in response]])[0]
+salaries = np.array([row['salary'] for row in response])
+uuids = [row['uuid'] for row in response]
 
-def predict1YOE():
-    return model.predict(np.array([1, 1]))[0][0]
+print('y shape: ', salaries.shape) # should be (n,)
+print('X shape: ', untrained_inputs.shape) # should be (n,115)
 
-print("Prediction before new inputs with low salaries")
-print(predict1YOE())
+callback = tf.keras.callbacks.EarlyStopping(
+    monitor="val_loss",
+    min_delta=0,
+    patience=0,
+    verbose=0,
+    mode="auto",
+    baseline=None,
+    restore_best_weights=False,
+)
+maxEpochs = 10
 
-model.fit(
-    new_inputs_labels,
-    new_inputs_features,
-    validation_split=0.2,
-    verbose=0, epochs=10)
+try:
+    history = model.fit(
+        untrained_inputs,
+        salaries,
+        validation_split=0.2,
+        verbose=0, epochs=maxEpochs,
+        callbacks=[callback])
 
-print("Prediction after new inputs with low salaries")
-print(predict1YOE())
+    print(f"Early stopping ran {len(history.history['loss'])} epochs out of the max of {maxEpochs}")
+    print("Prediction after new inputs")
+
+    store.save_model(model)
+    ApiClient.mark_input_trained(uuids)
+except BaseException as err:
+    print("Failed to fit new inputs to existing model")
+    print(f"Unexpected {err}, {type(err)}")

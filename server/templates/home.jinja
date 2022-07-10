@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Salary Estimator</title>
-    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+     <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.css'>
 </head>
 <body>
     <h1>Software Engineer Salary Estimator</h1>
@@ -49,8 +49,10 @@
 
         <label for="salary-actual-input">Actual Salary</label>
         <input id="salary-actual-input" type="number" name="salary_actual"/>
+        <label for="permission-granted-input">I grant permission to save my input</label>
+        <input id="permission-granted-input" type="checkbox" checked name="permission_granted"/>
         <p>
-            <em>Provided salaries will be saved and used to retrain the estimator. Your salary cannot be linked to your identity. We do not collect nor save any identifying information. The application is open source.</em>
+            <em>If you grant permission, salaries will be saved and used to retrain the estimator. Your salary cannot be linked to your identity. We do not collect nor save any identifying information. The application is open source.</em>
             <a href="https://github.com/BlairCurrey/swe-salary-predictor">Github Repo</a>
         </p>
         <br/>

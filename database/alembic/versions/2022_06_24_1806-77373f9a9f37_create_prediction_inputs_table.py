@@ -31,6 +31,8 @@ def upgrade() -> None:
         sa.Column('dev_type', sa.ARRAY(sa.String), nullable=False),
         sa.Column('languages', sa.ARRAY(sa.String), nullable=False),
         sa.Column('salary_actual', sa.Integer, nullable=False),
+        sa.Column('created_at', sa.DateTime(timezone=True), nullable=False, default=sa.func.now()),
+        sa.Column('trained', sa.Boolean, nullable=False, default=False)
     )
 
 def downgrade() -> None:

@@ -25,4 +25,5 @@ class StoreClient:
         latest_model = (self.db.query(ModelsStore)
                         .order_by(ModelsStore.created_at.desc())
                         .first())
+        print(f'Retrieved ref to latest model in db: {latest_model.path}')
         return load_model(f'gs://{latest_model.bucket}/{latest_model.path}')
