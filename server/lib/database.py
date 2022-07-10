@@ -6,8 +6,11 @@ import os
 
 load_dotenv()
 
-DB_DOMAIN = os.getenv('DB_DOMAIN')
-SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:password@{DB_DOMAIN}/swe_salary_estimator"
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_HOST = os.environ.get("DB_HOST")
+DB_NAME = os.environ.get("DB_NAME")
+SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:password@{DB_HOST}/swe_salary_estimator"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

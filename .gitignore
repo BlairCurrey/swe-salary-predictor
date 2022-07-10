@@ -1,6 +1,8 @@
 *-venv
 .ipynb_checkpoints
 .env
+.env-dev
+.env-prod
 __pycache__/
 dnn_model*
 model_*

@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,9 +8,31 @@ from sqlalchemy import pool
 
 from alembic import context
 
+load_dotenv()
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# here we allow ourselves to pass interpolation vars to alembic.ini
+# fron the host env
+# https://stackoverflow.com/questions/22178339/is-it-possible-to-store-the-alembic-connect-string-outside-of-alembic-ini
+section = config.config_ini_section
+
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_HOST = os.environ.get("DB_HOST")
+DB_NAME = os.environ.get("DB_NAME")
+
+if DB_USER is None: raise ValueError('DB_USER env var not set')
+if DB_PASS is None: raise ValueError('DB_PASS env var not set')
+if DB_HOST is None: raise ValueError('DB_HOST env var not set')
+if DB_NAME is None: raise ValueError('DB_NAME env var not set')
+
+config.set_section_option(section, "DB_USER", DB_USER)
+config.set_section_option(section, "DB_PASS", DB_PASS)
+config.set_section_option(section, "DB_HOST", DB_HOST)
+config.set_section_option(section, "DB_NAME", DB_NAME)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

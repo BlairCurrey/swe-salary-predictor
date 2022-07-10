@@ -5,6 +5,8 @@ on ubuntu:
 
     sudo apt-get install libpq-dev
 
+Setup environment variabels with local db credentals. See .env-example
+
 Create/run db via docker:
 
     docker-compose up -d
@@ -17,7 +19,7 @@ Access locally via shell:
 
 # migrations
 
-alembic is used for database migrations. General usage instructions can be found in these docs: https://alembic.sqlalchemy.org/en/latest/tutorial.html
+alembic is used for database migrations. General usage instructions can be found in these docs: https://alembic.sqlalchemy.org/en/latest/tutorial.html. Ensure the .env has the correct credentials (local vs prod).
 
 The connection to postgres is handled via a url in `./alembic.ini`.
 
@@ -36,3 +38,8 @@ Could alternatively replace head with revision id to upgrade to a specific revis
 To undo the last migration:
 
     alembic downgrade -1
+
+# deployment
+The database is hosted on heroku. Install the heroku cli: https://devcenter.heroku.com/articles/heroku-cli
+
+Credentials (including database name) are generated when the service is provisioned and change periodically. To interface with the db via alembic, change the `.env` to use credentials found on heroku for the `swe-salar-predictor` project. These need to be manually set for now. Once set, alembic can be run against the prod db from your local system.
