@@ -1,5 +1,5 @@
 # swe-salary-predictor
-A simple salary predictor for software engineers. Powered by a machine learning model that updates with your input.
+A salary predictor for software engineers. Powered by a machine learning model that updates with your input.
 
 ##  Repo Overview:
 
