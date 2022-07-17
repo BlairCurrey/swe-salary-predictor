@@ -12,7 +12,7 @@ DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_HOST = os.environ.get("DB_HOST")
 DB_SOCKET_DIR = os.environ.get("DB_SOCKET_DIR", "/cloudsql")
-INSTANCE_CONNECTION_NAME = os.environ["INSTANCE_CONNECTION_NAME"]
+INSTANCE_CONNECTION_NAME = os.environ.get("INSTANCE_CONNECTION_NAME")
 
 # https://cloud.google.com/sql/docs/postgres/connect-app-engine-standard#python
 SQLALCHEMY_DATABASE_URI = (f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"

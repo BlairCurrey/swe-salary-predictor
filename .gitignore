@@ -8,3 +8,4 @@ dnn_model*
 model_*
 *.pickle
 swe-salary-predictor-*.json
+target
