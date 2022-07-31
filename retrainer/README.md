@@ -6,3 +6,5 @@ After installing the dependencies we can just run src/main.py to run the retrain
 
 ## deployment
 The retrainer script is deployed as google cloud function. This can be deployed with `./deploy.sh`. This script will set the required environment variables from `.env-prod`.
+
+The retrainer function works in conjunction with a `retrain-model` Pub/Sub topic created on the Google Cloud console. A cloud schedule task was setup to publish a message to this topic periodically which will trigger the retrainer.
