@@ -36,6 +36,7 @@ def submit_form(request: Request, db: Session = Depends(get_db),
     if(form_data.permission_granted and salary_actual is not None 
        and is_valid_salary(salary_actual)):
         try:
+            print("Attempting to save new input in db")
             db.add(PredictionInput(years_code=raw_pred_input["years_code"],
                     years_code_pro=raw_pred_input["years_code_pro"], 
                     age=raw_pred_input["age"], 
@@ -46,6 +47,7 @@ def submit_form(request: Request, db: Session = Depends(get_db),
                     languages=raw_pred_input["languages"],
                     salary_actual=salary_actual, trained=False))
             db.commit()
+            print("Saved new input in db")
         except BaseException as err:
             print("Failed to save user input in db")
             print(f"Unexpected {err}, {type(err)}")
@@ -110,4 +112,9 @@ def mark_input_trained(uuids: List[str], db: Session = Depends(get_db)):
     except BaseException as err:
         print("Failed to save model store in db")
         print(f"Unexpected {err}, {type(err)}")
-        return { "error": err } 
+        return { "error": err }
+
+@app.put("/api/refetch-latest-model")
+def refetch_latest_model():
+    model = store.fetch_model()
+    return { "status": 200}
