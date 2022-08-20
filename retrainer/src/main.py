@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 tf.data.experimental.enable_debug_mode()
 
-# 'retrainer' function name expected by gcloud function
-def retrainer():
+# 'retrainer' function name expected by gcloud function.
+# 'data' and 'context' expected by gcloud function if triggered by pubsub
+def retrainer(data, context):
     store = StoreClient()
     model = store.fetch_model()
     response = ApiClient.get_untrained_inputs_encoded()['data']
@@ -60,5 +61,3 @@ def retrainer():
     except BaseException as err:
         print("Failed to fit new inputs to existing model")
         print(f"Unexpected {err}, {type(err)}")
-
-retrainer()
