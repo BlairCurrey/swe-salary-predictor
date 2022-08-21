@@ -1,20 +1,25 @@
 # End-to-end test setup
 - delete all but first model from file store
+   
     https://console.cloud.google.com/storage/browser/swe-salary-predictor-store;tab=objects?forceOnBucketsSortingFiltering=false&project=swe-salary-predictor&prefix=&forceOnObjectsSortingFiltering=false
 
 - delete last model (if not original model) reference from database
-    ```sql
+   
+   ```sql
     DELETE FROM models_store WHERE uuid IN (SELECT uuid FROM models_store ORDER BY created_at DESC LIMIT 1) AND path != 'model_1656041268';
     ```
 
 - delete all inputs from database
+
     ```sql
     TRUNCATE prediction_inputs;
     ```
 
 - api call to update to refetch model (important to do after deleting reference in db)
-    (DEV)  curl -X PUT http://localhost:8000/api/refetch-latest-model
-    (PROD) curl -X PUT https://server-r4tqtdaqaq-uc.a.run.app/api/refetch-latest-model
+
+    ```bash
+    curl -X PUT http://localhost:8000/api/refetch-latest-model
+    ```
 
 
 # End-to-end test
