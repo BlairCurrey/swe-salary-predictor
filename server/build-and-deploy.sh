@@ -13,3 +13,4 @@ gcloud run deploy server \
   --allow-unauthenticated \
   --add-cloudsql-instances $CONNECTION_NAME \
   --project $PROJECT_ID
+  # TODO: specify max instances of 1 (was already configured in gc site)

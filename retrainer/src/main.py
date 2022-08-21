@@ -20,7 +20,11 @@ def retrainer(data, context):
 
     count = untrained_inputs.shape[0]
     print(f'retrieved {count} untrained inputs')
-    if count == 0: return
+    min_inputs = 2
+    
+    if count < min_inputs:
+        print(f'Need at least ${min_inputs} new inputs to retrain, exiting')
+        return
 
     print('y shape: ', salaries.shape) # should be (n,)
     print('X shape: ', untrained_inputs.shape) # should be (n,115)
@@ -48,10 +52,12 @@ def retrainer(data, context):
 
         print(f"Early stopping ran {len(history.history['loss'])} epochs out of the max of {maxEpochs}")
 
-        # store.save_model(model)
+        store.save_model(model)
         print('model saved')
-        # ApiClient.mark_input_trained(uuids)
+        ApiClient.mark_input_trained(uuids)
         print('inputs marked as trained')
+        ApiClient.trigger_refetch_latest_model()
+        
     except BaseException as err:
         print("Failed to fit new inputs to existing model")
         print(f"Unexpected {err}, {type(err)}")

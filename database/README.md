@@ -13,7 +13,7 @@ Create/run db via docker:
 
 Access locally via shell:
 
-    docker exec -it database_database_1 bash
+    docker exec -it [CONTAINER_ID] bash
     su postgres
     psql swe_salary_estimator
 

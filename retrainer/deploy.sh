@@ -11,4 +11,5 @@ gcloud functions deploy retrainer \
     --trigger-topic="retrain-model" \
     --set-env-vars $env_vars \
     --source ./target \
-    --memory 1024MB
+    --memory 1024MB \
+    --timeout 540s

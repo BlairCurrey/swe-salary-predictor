@@ -26,3 +26,7 @@ class ApiClient:
     def fetch_latest_model_store():
         return (requests.get(f'{ApiClient.url}/latest-model-store')
                         .json()['latest_model_store'])
+
+    @staticmethod
+    def trigger_refetch_latest_model():
+        return requests.put(f'{ApiClient.url}/refetch-latest-model')
