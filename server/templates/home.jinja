@@ -7,40 +7,40 @@
     <h1>Software Engineer Salary Estimator</h1>
     <form method="post">
         <label for="years-code-input">Years Experience Coding</label>
-        <input id="years-code-input" type="number" name="years_code"/>
+        <input id="years-code-input" type="number" name="years_code" required/>
         <br/>
         <label for="years-code-pro-input">Years Experience Coding Professionally</label>
-        <input id="years-code-pro-input" type="number" name="years_code_pro"/>
+        <input id="years-code-pro-input" type="number" name="years_code_pro" required/>
         <br/>
         <label for="age-input">Age</label>
-        <input id="age-input" type="number" name="age"/>
+        <input id="age-input" type="number" name="age" required/>
         <br/>
         <label for="age-first-code-input">Age You First Coded</label>
-        <input id="age-first-code-input" type="number" name="age_first_code"/>
+        <input id="age-first-code-input" type="number" name="age_first_code" required/>
         <br/>
         <label for="country-select">Country</label>
-        <select id="country-select" name="country">
+        <select id="country-select" name="country" required>
             {% for country in countries %}
                 <option value="{{country}}">{{country}}</option>
             {% endfor %}
         </select>
         <br/>
         <label for="ed-level-select">Education Level</label>
-        <select id="ed-level-select" name="ed_level">
+        <select id="ed-level-select" name="ed_level" required>
             {% for ed_level in ed_levels %}
                 <option value="{{ed_level}}">{{ed_level}}</option>
             {% endfor %}
         </select>
         <br/>
         <label for="dev-type-multiselect">Role Type</label>
-        <select id="dev-type-multiselect" name="dev_type">
+        <select id="dev-type-multiselect" name="dev_type" required>
             {% for dev_type in dev_types %}
                 <option value="{{dev_type}}">{{dev_type}}</option>
             {% endfor %}
         </select>
         <br/>
         <label for="languages-multiselect">Languages</label>
-        <select id="languages-multiselect" name="languages" multiple>
+        <select id="languages-multiselect" name="languages" multiple required>
             {% for language in languages %}
                 <option value="{{language}}">{{language}}</option>
             {% endfor %}

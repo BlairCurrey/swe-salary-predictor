@@ -9,3 +9,4 @@ model_*
 *.pickle
 swe-salary-predictor-*.json
 target
+service.yaml

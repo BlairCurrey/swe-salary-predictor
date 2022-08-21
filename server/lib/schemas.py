@@ -13,7 +13,7 @@ class PredictFormSchema(BaseModel):
     languages: List[str]
     ed_level: str
     salary_actual: Optional[int]
-    permission_granted: bool
+    permission_granted: Optional[bool]
 
     @classmethod
     def as_form(
@@ -27,7 +27,7 @@ class PredictFormSchema(BaseModel):
         languages: List[str] = Form(...),
         ed_level: str = Form(...),
         salary_actual: Optional[int] = Form(None),
-        permission_granted: bool = Form(...)
+        permission_granted: Optional[bool] = Form(None) # unchecked checkbox is None
     ):
         return cls(
             years_code=years_code,
@@ -39,7 +39,7 @@ class PredictFormSchema(BaseModel):
             languages=languages,
             ed_level=ed_level,
             salary_actual=salary_actual,
-            permission_granted=permission_granted
+            permission_granted=bool(permission_granted) # casts None to false
         )
 
 class ModelStoreSchema(BaseModel):
