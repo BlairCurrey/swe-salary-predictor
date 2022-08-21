@@ -2,4 +2,6 @@
 
 `baselin-retrainer.ipynb` is a retraining proof of concept that utilizes are minimalistic model from `baseline.ipynb`.
 
-`model.ipynb` is where I am building the full model that will utilize more features and be used in the final application. This was developed on Google Colab.
+`model.ipynb` is the final jupyter notebook for building the model. I utlized Google Colab to develop this notebook.
+
+`model-1656041268.ipynb` is an older version of this notebook which I saved because it produced the base model used in the final applciation. The revised, newer verions of the notebook (`model.ipynb`) essentially produces the same model, but it cleans up the notebook considerably and has additional text blocks.
