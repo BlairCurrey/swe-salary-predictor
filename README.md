@@ -5,7 +5,7 @@ A salary predictor for software engineers and other tech roles. Powered by a mac
 The individual service READMEs have more information concerning local development and deployment.
 
 ## docs
-Miscellaneous documentation
+Miscellaneous documentation, manual test script
 
 ## analytics
 Python environment for bulding and testing the model for predicting salaries.
