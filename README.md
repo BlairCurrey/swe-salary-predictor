@@ -18,3 +18,15 @@ Postgres database initialized with docker and managed with `alembic`.
 
 ## retrainer
 Takes the original model and fits additional data to it. Saves the resulting model.
+
+## System Design
+![System Design](./docs/salary-predictor-design.jpg)
+
+
+## Screenshots
+### Form
+![Form](./docs/screenshots/form.jpg)
+### Form Filled
+![Form Filled](./docs/screenshots/form-filled.jpg)
+### Prediction
+![Prediction](./docs/screenshots/prediction.jpg)
