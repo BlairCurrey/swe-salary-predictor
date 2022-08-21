@@ -22,7 +22,7 @@
 - SEE: 1 model in google cloud store
 - DO:  2 new inputs with save permission checked (remember input)
 - SEE: predictions in webpage
-- SEE: new inputs in database
+- SEE: new inputs in database (trained is false)
 - DO:  manually run retrainer
 - SEE: new model in google cloud store
 - SEE: "retreived 2 untrained input" in logs
