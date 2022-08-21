@@ -116,5 +116,6 @@ def mark_input_trained(uuids: List[str], db: Session = Depends(get_db)):
 
 @app.put("/api/refetch-latest-model")
 def refetch_latest_model():
+    global model 
     model = store.fetch_model()
-    return { "status": 200}
+    return { "status": 200 }
