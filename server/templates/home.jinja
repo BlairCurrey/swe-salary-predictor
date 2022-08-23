@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>Software Engineer Salary Estimator</h1>
+    <p>All inputs are required, except for <strong>Actual Salary</strong>. If <strong>Actual Salary</strong> is provided and permission is granted, your input will be used when the model is periodically retrained</p>
     <form method="post">
         <label for="years-code-input">Years Experience Coding</label>
         <input id="years-code-input" type="number" name="years_code" required/>
@@ -39,7 +40,7 @@
             {% endfor %}
         </select>
         <br/>
-        <label for="languages-multiselect">Languages</label>
+        <label for="languages-multiselect">Languages <em>(multiselect)</em></label>
         <select id="languages-multiselect" name="languages" multiple required>
             {% for language in languages %}
                 <option value="{{language}}">{{language}}</option>
