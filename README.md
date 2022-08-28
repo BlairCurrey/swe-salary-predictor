@@ -24,8 +24,6 @@ Takes the original model and fits additional data to it. Saves the resulting mod
 
 
 ## Screenshots
-### Form
-![Form](./docs/screenshots/form.jpg)
 ### Form Filled
 ![Form Filled](./docs/screenshots/form-filled.jpg)
 ### Prediction
